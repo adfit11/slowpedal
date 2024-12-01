@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta Information -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slow Pedal</title>
+
+  <!-- Include Remix Icon for icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <!-- Logo Image -->
+      <img src="img/slowLogo.png" alt="Slow Pedal Logo">
+      <h1>Slow Pedal</h1>
+    </div>
+    <div class="header-buttons">
+      <button class="header-button" id="info-button">About</button>
+      <button class="header-button" onclick="window.open('https://example.com', '_blank')">Build a Slow Pedal</button>
+    </div>
+  </header>
+
+  <!-- Modal -->
+  <div id="modal-overlay">
+    <div id="modal-content">
+      <button id="modal-close-button">&times;</button>
+      <h2>About Slow Pedal</h2>
+      <p>
+        <!-- Dummy text (approximately 200 words) -->
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tincidunt, tortor vel fermentum facilisis, orci erat aliquam est, at ultricies nunc justo in purus. Donec quis ligula sed lorem suscipit blandit. Sed id sapien sed nulla luctus ultricies. Fusce nec massa vel ligula ultricies interdum. Mauris pulvinar diam non felis feugiat, a fermentum libero cursus. Aenean et lacus in odio efficitur elementum. Vestibulum ac nisl id magna dapibus vehicula. Integer non volutpat sapien, at placerat enim. Nullam finibus nisi at neque pulvinar, vitae hendrerit lectus efficitur. Sed vitae diam vel mi placerat tempor. Integer quis purus leo. Aenean vitae metus vel orci tempor porttitor. Phasellus commodo urna in quam cursus, at sagittis turpis dignissim.
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content">
+    <div id="top-controls">
+      <div class="input-group">
+        <input type="text" id="video-url" placeholder="Enter YouTube video URL">
+        <button class="action-button small-button red-button" id="load-video" title="Load Video">
+          <i class="ri-youtube-fill"></i>
+        </button>
+      </div>
+      <div class="input-group">
+        <input type="file" id="local-video-file" accept="video/*">
+        <button class="action-button small-button red-button" id="load-local-video" title="Load Local Video">
+          <i class="ri-folder-open-fill"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Player container -->
+    <div id="player-container">
+      <div id="player"></div>
+      <!-- Added HTML5 video player with controls -->
+      <video id="html5-player" controls></video>
+    </div>
+
+    <!-- Timeline visualization -->
+    <div id="timeline-container">
+      <div id="timeline">
+        <div id="loop-section"></div>
+        <div id="playback-marker"></div>
+      </div>
+    </div>
+
+    <!-- Bottom controls -->
+    <div id="bottom-controls">
+      <button class="action-button start-stop" id="start-stop-button" title="Start Video"><i class="ri-play-mini-fill"></i></button>
+      <button class="action-button slow-down" id="slow-down-button" title="Slow Down"><i class="ri-rewind-mini-fill"></i></button>
+      <button class="action-button speed-up" id="speed-up-button" title="Speed Up"><i class="ri-speed-mini-fill"></i></button>
+      <button class="action-button shift-loop-backward" id="shift-loop-backward-button" title="Shift Loop Backward"><i class="ri-arrow-left-s-line"></i></button>
+      <button class="action-button shift-loop-forward" id="shift-loop-forward-button" title="Shift Loop Forward"><i class="ri-arrow-right-s-line"></i></button>
+      <button class="action-button halve-loop-length" id="halve-loop-length-button" title="Halve Loop Length"><i class="ri-subtract-line"></i></button>
+      <button class="action-button double-loop-length" id="double-loop-length-button" title="Double Loop Length"><i class="ri-add-line"></i></button>
+      <button class="action-button loop-control" id="control-button" title="Set Loop Start"><i class="ri-loop-left-line"></i></button>
+    </div>
+
+    <!-- Info controls -->
+    <div id="info-controls">
+      <div id="loop-inputs">
+        <div class="input-group">
+          <input type="text" id="speed-input" placeholder="Speed (%)" title="Enter Speed as Percentage">
+          <button class="action-button set-speed small-button" id="set-speed-button" title="Set Speed"><i class="ri-check-line"></i></button>
+        </div>
+        <div class="input-group">
+          <input type="text" id="loop-start-input" placeholder="M:SS" title="Loop Start">
+          <input type="text" id="loop-end-input" placeholder="M:SS" title="Loop End">
+          <button class="action-button set-loop small-button" id="set-loop-button" title="Set Loop"><i class="ri-check-line"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/scripts.js"></script>
+
+</body>
+</html>

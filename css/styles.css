@@ -1,0 +1,403 @@
+  /* Global Styles */
+  body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f0f0f0; /* Light grey background */
+  }
+
+  /* Header Styles */
+  header {
+    background-color: #222; /* Dark background matching the logo */
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  header .logo-container {
+    display: flex;
+    align-items: center;
+  }
+
+  header .logo-container img {
+    height: 50px;
+    margin-right: 15px;
+  }
+
+  header h1 {
+    font-size: 28px;
+    margin: 0;
+    color: #fff; /* White text to contrast the dark background */
+  }
+
+  header .header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  header .header-button {
+    background-color: #e50914; /* Netflix red color for emphasis */
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+  }
+
+  header .header-button:hover {
+    background-color: #bf0810;
+  }
+
+  /* Main Content Styles */
+  #main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center content vertically */
+    overflow: auto; /* Allow scrolling if content exceeds viewport */
+    padding-top: 20px; /* Space under the header */
+  }
+
+  #top-controls {
+    margin: 20px;
+    flex-shrink: 0; /* Prevent from shrinking */
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Input Group Styles */
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  #top-controls input[type="text"],
+  #top-controls input[type="file"] {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 250px;
+    height: 30px; /* Match bottom inputs */
+    background-color: #fff;
+  }
+
+  #top-controls input[type="file"] {
+    padding: 0; /* Remove padding for file input */
+  }
+
+  /* Small Action Buttons */
+  .action-button.small-button {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    position: relative;
+  }
+
+  /* Red Button Style */
+  .action-button.red-button {
+    background-color: #e50914; /* Red color */
+    color: #fff; /* White icon */
+  }
+
+  .action-button.red-button:hover {
+    background-color: #bf0810;
+  }
+
+  /* Player container */
+  #player-container {
+    width: 68%; /* Reduced size by 15% */
+    max-width: 680px; /* Reduced max-width by 15% */
+    aspect-ratio: 16 / 9;
+    position: relative; /* For positioning timeline elements */
+    flex-shrink: 0; /* Prevent from shrinking */
+    min-height: 200px; /* Set a minimum height */
+    background-color: #000; /* Black background for video area */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  #player, #html5-player {
+    width: 100%;
+    height: 100%;
+  }
+
+  #html5-player {
+    display: none; /* Initially hide the HTML5 video player */
+    background-color: black; /* Ensure consistent background */
+  }
+
+  /* Hide default controls for the YouTube iframe */
+  #player iframe {
+    pointer-events: none; /* Disable interaction with the iframe controls */
+  }
+
+  /* Custom Controls */
+  #timeline-container {
+    width: 68%; /* Match player-container width */
+    max-width: 680px; /* Match player-container max-width */
+    position: relative;
+    height: 20px;
+    margin-top: 10px;
+    flex-shrink: 0; /* Prevent from shrinking */
+  }
+
+  #timeline {
+    width: 100%;
+    height: 10px;
+    background-color: #ccc;
+    position: relative;
+    border-radius: 5px;
+  }
+
+  #loop-section {
+    height: 100%;
+    background-color: rgba(0, 150, 250, 0.5);
+    position: absolute;
+    left: 0;
+    width: 0;
+    border-radius: 5px;
+  }
+
+  #playback-marker {
+    width: 2px;
+    height: 20px;
+    background-color: red;
+    position: absolute;
+    top: -5px;
+    left: 0;
+  }
+
+  /* Bottom controls */
+  #bottom-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    flex-shrink: 0; /* Prevent from shrinking */
+    margin-top: 20px; /* Added spacing above input controls */
+  }
+
+  .action-button {
+    width: 50px; /* Uniform width and height */
+    height: 50px;
+    border-radius: 50%; /* Make buttons round */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px; /* Increase icon size */
+    color: #fff; /* Icon color */
+    background-color: #888; /* Default background color */
+    border: none; /* Remove border */
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    position: relative; /* For tooltip positioning */
+  }
+
+  .action-button:hover {
+    transform: scale(1.1);
+  }
+
+  .action-button i {
+    pointer-events: none; /* So clicks go to button, not icon */
+  }
+
+  /* Tooltip styles */
+  .action-button::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 10;
+  }
+
+  .action-button:hover::after {
+    opacity: 1;
+  }
+
+  #info-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    margin-top: 20px; /* Added spacing between buttons and inputs */
+  }
+
+  #loop-inputs {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Increased gap between groups */
+    margin-top: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #loop-inputs input {
+    width: 80px;
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  #loop-inputs input::placeholder {
+    text-align: center;
+  }
+
+  /* Small buttons aligned with input fields */
+  .small-button {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    border-radius: 50%;
+  }
+
+  /* Adjusting alignment */
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* Color palette */
+  /* Start Video Button - Blue */
+  .action-button.start-stop {
+    background-color: #007BFF;
+  }
+  .action-button.start-stop:hover {
+    background-color: #0056b3;
+  }
+
+  /* Loop Control Button - Black */
+  .action-button.loop-control {
+    background-color: #000;
+  }
+  .action-button.loop-control:hover {
+    background-color: #333;
+  }
+
+  /* Set Loop Button - Black */
+  .action-button.set-loop {
+    background-color: #000;
+  }
+  .action-button.set-loop:hover {
+    background-color: #333;
+  }
+
+  /* Set Speed Button - Green */
+  .action-button.set-speed {
+    background-color: #28A745;
+  }
+  .action-button.set-speed:hover {
+    background-color: #1e7e34;
+  }
+
+  /* Speed Up and Slow Down - Green */
+  .action-button.speed-up,
+  .action-button.slow-down {
+    background-color: #28A745;
+  }
+  .action-button.speed-up:hover,
+  .action-button.slow-down:hover {
+    background-color: #1e7e34;
+  }
+
+  /* Shift Loop Backward and Forward - Orange */
+  .action-button.shift-loop-backward,
+  .action-button.shift-loop-forward {
+    background-color: #FD7E14;
+  }
+  .action-button.shift-loop-backward:hover,
+  .action-button.shift-loop-forward:hover {
+    background-color: #e4600f;
+  }
+
+  /* Double and Halve Loop Length - Purple */
+  .action-button.double-loop-length,
+  .action-button.halve-loop-length {
+    background-color: #6F42C1;
+  }
+  .action-button.double-loop-length:hover,
+  .action-button.halve-loop-length:hover {
+    background-color: #59359c;
+  }
+
+  /* Modal Styles */
+  #modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #modal-content {
+    background-color: #fff;
+    padding: 20px;
+    width: 75%;
+    max-width: 800px;
+    max-height: 80%;
+    overflow-y: auto;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  #modal-content h2 {
+    margin-top: 0;
+  }
+
+  #modal-close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+  }
+
+  #modal-close-button:hover {
+    color: #000;
+  }
