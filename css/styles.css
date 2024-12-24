@@ -339,7 +339,7 @@
     background-color: #333;
   }
 
-  /* Set Loop Button - Black */
+  /* Set Loop Button */
   .action-button.set-loop {
     background-color: #000;
   }
@@ -347,7 +347,7 @@
     background-color: #333;
   }
 
-  /* Set Speed Button - Green */
+  /* Set Speed Button */
   .action-button.set-speed {
     background-color: #28A745;
   }
@@ -355,7 +355,7 @@
     background-color: #1e7e34;
   }
 
-  /* Speed Up and Slow Down - Green */
+  /* Speed Up and Slow Down  */
   .action-button.speed-up,
   .action-button.slow-down {
     background-color: #28A745;
@@ -365,7 +365,7 @@
     background-color: #1e7e34;
   }
 
-  /* Shift Loop Backward and Forward - Orange */
+  /* Shift Loop Backward and Forward */
   .action-button.shift-loop-backward,
   .action-button.shift-loop-forward {
     background-color: #e21010;
@@ -375,7 +375,7 @@
     background-color: #be0e0e;
   }
 
-  /* Double and Halve Loop Length - Purple */
+  /* Double and Halve Loop Length */
   .action-button.double-loop-length,
   .action-button.halve-loop-length {
     background-color: #dccb11;

@@ -197,11 +197,11 @@ function updateStartStopButton() {
   const startStopButton = document.getElementById('start-stop-button');
   if (videoPlayer.isPlaying()) {
     startStopButton.innerHTML = '<i class="ri-pause-mini-line"></i>';
-    startStopButton.title = 'Pause Video';
+    startStopButton.title = 'Pause Video - Spacebar';
     playing = true;
   } else {
     startStopButton.innerHTML = '<i class="ri-play-mini-fill"></i>';
-    startStopButton.title = 'Start Video';
+    startStopButton.title = 'Start Video - Spacebar';
     playing = false;
   }
 }
