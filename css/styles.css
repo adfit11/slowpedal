@@ -85,19 +85,45 @@
     gap: 5px;
   }
 
-  #top-controls input[type="text"],
+  /* Local input */
   #top-controls input[type="file"] {
-    padding: 5px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 250px;
-    height: 30px; /* Match bottom inputs */
+    height: 40px;
+    background-color: #fff;
+    padding: 10px;
+  }
+
+  input[type="file"]::file-selector-button {
+    position: relative;
+    top: 5px;
+    left: 5px;
+    border: 2px solid #d6d6d6;
+    padding: 0.2em 0.4em;
+    border-radius: 0.2em;
+    background-color: #d6d6d6;
+    color: #757575;
+  }
+
+  /* YouTube input */
+  #top-controls input[type="text"] {
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 250px;
+    height: 40px;
     background-color: #fff;
   }
 
   #top-controls input[type="file"] {
     padding: 0; /* Remove padding for file input */
+  }
+
+  .or-gap {
+    text-align: center;
+    padding: 8px 0px;
   }
 
   /* Small Action Buttons */
@@ -232,7 +258,7 @@
   .action-button::after {
     content: attr(title);
     position: absolute;
-    bottom: 60px;
+    top: -35px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #333;
@@ -299,10 +325,10 @@
   /* Color palette */
   /* Start Video Button - Blue */
   .action-button.start-stop {
-    background-color: #007BFF;
+    background-color: #4169e1;
   }
   .action-button.start-stop:hover {
-    background-color: #0056b3;
+    background-color: #3655b5;
   }
 
   /* Loop Control Button - Black */
@@ -342,21 +368,21 @@
   /* Shift Loop Backward and Forward - Orange */
   .action-button.shift-loop-backward,
   .action-button.shift-loop-forward {
-    background-color: #FD7E14;
+    background-color: #e21010;
   }
   .action-button.shift-loop-backward:hover,
   .action-button.shift-loop-forward:hover {
-    background-color: #e4600f;
+    background-color: #be0e0e;
   }
 
   /* Double and Halve Loop Length - Purple */
   .action-button.double-loop-length,
   .action-button.halve-loop-length {
-    background-color: #6F42C1;
+    background-color: #dccb11;
   }
   .action-button.double-loop-length:hover,
   .action-button.halve-loop-length:hover {
-    background-color: #59359c;
+    background-color: #c8b910;
   }
 
   /* Modal Styles */
