@@ -153,7 +153,7 @@ void loop() {
 ```
 
 ## That should be it!
-As you can see in the code, a successfully programmed pedal will effectively be an 8 key wired keyboard (try it in a text editor). Your actual keyboard can controll the site using those keys as well.  
+As you can probably see in the code, a successfully programmed pedal will effectively be an 8 key wired keyboard (try it in a text editor). Your actual keyboard can control the site using those keys as well.  
 
 Have fun!  
 
