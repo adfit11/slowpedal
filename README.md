@@ -1,5 +1,5 @@
 # Slow Pedal
-A DIY alternative to Vidami for guitar practice. See below for parts list and build plans.  
+Build your own alternative to Vidami for guitar practice, for around $25. See below for parts list and build plans.  
 
 <img width="600" alt="pedalShot" src="https://github.com/user-attachments/assets/905d09ac-739b-4970-bcf2-d438a7cbeae1" />. 
 
