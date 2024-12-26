@@ -71,7 +71,7 @@ I have the USB cable plugged direcrly into the Dev Board, so I have a hole in th
 
 ## Programming the Dev Board
 
-The ATmega32U4 Pro Micro can be programmed using the Arduino IDE ([download here](https://www.arduino.cc/en/software)) and will emulate a keyboard if you just call on the libraries to do so.  
+The ATmega32U4 Pro Micro can be programmed using the Arduino IDE ([download here](https://www.arduino.cc/en/software)) and will [emulate a keyboard](https://www.youtube.com/watch?v=yTc2GLXfCOY) if you just call on the libraries to do so.  
   
 With the IDE downloaded and installed, connect the ATmega32U4 to the computer, ensuring it is recognised by the software. It'll probably be identified as ___Arduino 'Something'___  
   
