@@ -28,7 +28,7 @@ You can reach the same site directly here:
 The code for this app is open source, and available at:  
 [https://github.com/adfit11/slowpedal](https://github.com/adfit11/slowpedal)  
 
-you may download it to run locally if you wish.  
+you may download it to run locally if you wish. I also welcome improvements to the code you find here. Contribute if you feel moved to! I have an email address for the project if you'd like to contact me - __slowpedalproject@gmail.com__  
 
 
 ## Hardware - Parts List
