@@ -85,27 +85,39 @@
     gap: 5px;
   }
 
+
+  
   /* Local input */
   #top-controls input[type="file"] {
     font-size: 14px;
+    color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 250px;
     height: 30px;
     background-color: #fff;
-    padding: 10px;
+    padding: 0px;
   }
 
+  /* Custom label for local file selector */
+  .local-video-file-label {
+    font-size: 14px;
+    position: relative;
+    left: -170px;
+    color: #757575;
+    margin-right: -120px;
+  }
+
+  /* Custom button for local file selector */
   input[type="file"]::file-selector-button {
     font-size: 12px;
     position: relative;
-    top: 5px;
-    left: 5px;
+    top: 3px;
+    left: 3px;
     border: 2px solid #d6d6d6;
     padding: 0.2em 0.4em;
     border-radius: 0.2em;
     background-color: #d6d6d6;
-    color: #757575;
   }
 
   /* YouTube input */
@@ -117,15 +129,8 @@
     height: 30px;
     background-color: #fff;
     padding-left: 7px;
-  }
+    color: #000000;
 
-  #top-controls input[type="file"] {
-    padding: 0; /* Remove padding for file input */
-  }
-
-  .or-gap {
-    text-align: center;
-    padding: 8px 0px;
   }
 
   /* Small Action Buttons */

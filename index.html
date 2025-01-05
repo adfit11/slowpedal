@@ -22,20 +22,25 @@
     </div>
     <div id="top-controls">
       <div class="input-group">
+
         <input type="text" id="video-url" placeholder="Enter YouTube video URL">
         <button class="action-button small-button red-button" id="load-video" title="Load Video">
           <i class="ri-youtube-fill"></i>
         </button>
+
       </div>
       <div class="input-group">
 
-        
-        <input type="file" id="local-video-file" accept="video/*">
+
+          <input type="file" id="local-video-file" accept="video/*">
+          <label for="local-video-file" class="local-video-file-label">Select Local Video</label>
+
 
         <button class="action-button small-button red-button" id="load-local-video" title="Load Local Video">
           <i class="ri-folder-open-fill"></i>
         </button>
       </div>
+
     </div>
     <div class="header-buttons">
       <button class="header-button" id="info-button">About</button>
