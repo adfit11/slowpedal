@@ -70,7 +70,7 @@
   }
 
   #top-controls {
-    margin: 10px;
+    margin: 20px;
     flex-shrink: 0; /* Prevent from shrinking */
     display: flex;
     gap: 20px;
@@ -87,17 +87,16 @@
 
   /* Local input */
   #top-controls input[type="file"] {
-    font-size: 14px;
+    font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 250px;
-    height: 30px;
+    height: 40px;
     background-color: #fff;
     padding: 10px;
   }
 
   input[type="file"]::file-selector-button {
-    font-size: 12px;
     position: relative;
     top: 5px;
     left: 5px;
@@ -110,13 +109,12 @@
 
   /* YouTube input */
   #top-controls input[type="text"] {
-    font-size: 14px;
+    font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 250px;
-    height: 30px;
+    height: 40px;
     background-color: #fff;
-    padding-left: 7px;
   }
 
   #top-controls input[type="file"] {
@@ -155,8 +153,8 @@
 
   /* Player container */
   #player-container {
-    width: 90%; 
-    max-width: 900px; 
+    width: 68%; /* Reduced size by 15% */
+    max-width: 680px; /* Reduced max-width by 15% */
     aspect-ratio: 16 / 9;
     position: relative; /* For positioning timeline elements */
     flex-shrink: 0; /* Prevent from shrinking */
@@ -186,8 +184,8 @@
 
   /* Custom Controls */
   #timeline-container {
-    width: 90%; /* Match player-container width */
-    max-width: 900px; /* Match player-container max-width */
+    width: 68%; /* Match player-container width */
+    max-width: 680px; /* Match player-container max-width */
     position: relative;
     height: 20px;
     margin-top: 10px;
@@ -226,15 +224,15 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 10px;
     flex-shrink: 0; /* Prevent from shrinking */
     margin-top: 20px; /* Added spacing above input controls */
   }
 
   .action-button {
-    width: 40px; /* Uniform width and height */
-    height: 40px;
+    width: 50px; /* Uniform width and height */
+    height: 50px;
     border-radius: 50%; /* Make buttons round */
     display: flex;
     align-items: center;
@@ -292,12 +290,13 @@
     display: flex;
     align-items: center;
     gap: 20px; /* Increased gap between groups */
+    margin-top: 10px;
     flex-wrap: wrap;
     justify-content: center;
   }
 
   #loop-inputs input {
-    width: 50px;
+    width: 80px;
     padding: 5px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -335,7 +334,6 @@
   /* Loop Control Button - Black */
   .action-button.loop-control {
     background-color: #000;
-    margin-right: 15px;
   }
   .action-button.loop-control:hover {
     background-color: #333;
