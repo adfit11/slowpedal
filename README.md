@@ -1,5 +1,5 @@
 # Slow Pedal
-Build your own alternative to Vidami for guitar practice, for around $25. See below for parts list and build plans.  
+Build your own alternative to Vidami for guitar practice, for around $30. See below for parts list and build plans.  
 
 <img width="600" alt="pedalShot" src="https://github.com/user-attachments/assets/905d09ac-739b-4970-bcf2-d438a7cbeae1" />. 
 
@@ -43,6 +43,7 @@ __You can use what you like for the rest, but here's what I used:__
 1 x [Prototyping board](https://www.aliexpress.com/w/wholesale-prototyping-board.html?spm=a2g0o.home.search.0) trimmed to 97x192mm in mine  
 8 x [Momentary buttons (Normally Open)](https://www.aliexpress.com/item/4000638162034.html), in colours to match the app (1BLK, 1BLU, 2RED, 2GRN, 2YEL)  
 8 X [10K OHM 1/2W Resistors](https://www.jaycar.com.au/10k-ohm-0-5-watt-metal-film-resistors-pack-of-8/p/RR0596)  
+1 x [USB-C case mounting](https://www.aliexpress.com/item/1005007032702648.html)
 Shielded Wire  
 Bare Wire  
 Long _USB-C to your-computer_ cable
@@ -65,9 +66,10 @@ Ugly side! (all to ground):
   
 With all this done ensure you have holes drilled in your casing to accomodate the buttons. There will be no need to affix the prototyping board to the case, as the button mounts will do that.
 
-I have the USB cable plugged direcrly into the Dev Board, so I have a hole in the side of the casing for that.  
+I have a USB-C housing mounted in the pedal casing, to connect the computer to the dev board with a standard USB-C cable.
 
-<img width="400" alt="outhole" src="https://github.com/user-attachments/assets/69fe82a1-5934-4472-9d55-59c738bffd80" />
+<img width="400" alt="USB" src="https://github.com/user-attachments/assets/4069b777-fa93-4a81-a4a5-6f8f8b3eee05" />
+
 
 ## Programming the Dev Board
 
