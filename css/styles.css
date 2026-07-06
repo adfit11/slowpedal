@@ -14,6 +14,10 @@
     --color-state-loading: #f2c94c;
     --color-state-ready: #4cd97b;
     --color-state-failed: #ef5350;
+
+    /* Shared corner radius for the load-state indicator and the video-source boxes,
+       so they can't visually drift apart again (Persistent Bottom Controls feature). */
+    --radius-panel: 8px;
   }
 
   /* Global Styles */
@@ -144,7 +148,7 @@
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
-    border-radius: 20px;
+    border-radius: var(--radius-panel);
     font-size: 14px;
     color: var(--color-text-muted);
     background-color: var(--color-surface);
@@ -180,7 +184,7 @@
     gap: 4px;
     padding: 8px 12px;
     border: 1px solid var(--color-border);
-    border-radius: 8px;
+    border-radius: var(--radius-panel);
   }
 
   .video-source-label {
@@ -342,7 +346,9 @@
   }
 
   /* Playback/loop controls overlay: spans the bottom edge of the player area.
-     Same hotzone pattern as #top-controls — see contracts/control-overlay-behavior.md. */
+     Unlike #top-controls, this zone is always visible — it never hides based on
+     load state, per the Persistent Bottom Controls feature. It keeps the overlay
+     position/scrim purely for visual consistency with the player. */
   #bottom-controls {
     position: absolute;
     bottom: 0;
@@ -356,17 +362,6 @@
     gap: 10px;
     padding: 16px 20px;
     background: linear-gradient(to top, var(--color-surface-translucent), transparent);
-  }
-
-  body.state-ready #bottom-controls > * {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-
-  body.state-ready #bottom-controls.revealed > * {
-    opacity: 1;
-    pointer-events: auto;
   }
 
   .action-button {

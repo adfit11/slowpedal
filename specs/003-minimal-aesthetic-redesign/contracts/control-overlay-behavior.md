@@ -1,35 +1,42 @@
 # Contract: Control Overlay Hide/Reveal Behavior
 
+> **Amended by the Persistent Bottom Controls and Matching Status Radius feature
+> (specs/004-fixed-controls-radius-match)**: this contract now governs only
+> `#top-controls`. `#bottom-controls` was removed from it — the playback/loop controls
+> are permanently visible and no longer participate in `body.state-ready` or any hover
+> hotzone. `#bottom-controls` keeps the overlay *position*/scrim this feature gave it,
+> just not the hiding behavior. The sections below describe the current (post-004)
+> contract; where useful, the prior two-zone behavior is noted for history.
+
 This is the internal contract between the load-state machine (existing,
-`js/scripts.js`), the two new hover hotzones, and the CSS that reacts to both. Not a
-network/API contract — this is a static site — but it's the seam future changes to
-either the load-state logic or the layout need to respect.
+`js/scripts.js`), the hover hotzone, and the CSS that reacts to it. Not a network/API
+contract — this is a static site — but it's the seam future changes to either the
+load-state logic or the layout need to respect.
 
 ## State input: `body.state-ready`
 
 - **Set by**: `setLoadReady()` — add the class.
 - **Cleared by**: `setLoadLoading()` and `setLoadFailed()` — remove the class.
-- **Consumed by**: CSS rules of the form `body.state-ready #top-controls:not(.revealed) { opacity: 0; pointer-events: none; }` (and the equivalent for `#bottom-controls`).
+- **Consumed by**: the CSS rule `body.state-ready #top-controls > * { opacity: 0; pointer-events: none; }` (overridden by `.revealed`, below). `#bottom-controls` no longer has an equivalent rule as of feature 004.
 - **Guarantee**: This class reflects `loadState === 'ready'` at all times; any of the
   three functions above running is sufficient to keep it in sync — no other code path
   may set `loadState` without going through one of them (already true today).
 
-## Hover input: `.revealed` on each hotzone
+## Hover input: `.revealed` on the hotzone
 
-- **Hotzones**: two containers, one wrapping `#top-controls`, one wrapping
-  `#bottom-controls` (or the containers themselves, if no extra wrapper is needed once
-  they're repositioned as overlays) — each spans the full width of its edge (top/bottom
-  of the enlarged player area) so the mouse can find it without precision-aiming at the
-  (possibly invisible) controls within.
-- **`mouseenter`**: add `.revealed` to that hotzone immediately, and cancel any pending
-  hide timer for it.
-- **`mouseleave`**: start a timer (500–800ms); when it fires, remove `.revealed` from
-  that hotzone. If `mouseenter` fires again before the timer elapses, the timer is
-  cancelled (per the `mouseenter` behavior above).
-- **Consumed by**: the same CSS rules as above — `.revealed` on the hotzone overrides
+- **Hotzone**: `#top-controls` itself — spans the full width of the top edge of the
+  enlarged player area, so the mouse can find it without precision-aiming at the
+  (possibly invisible) controls within. (Prior to feature 004, `#bottom-controls` was a
+  second, independent hotzone using the same mechanism; it no longer is.)
+- **`mouseenter`**: add `.revealed` to the hotzone immediately, and cancel any pending
+  hide timer.
+- **`mouseleave`**: start a timer (~600ms); when it fires, remove `.revealed`. If
+  `mouseenter` fires again before the timer elapses, the timer is cancelled (per the
+  `mouseenter` behavior above).
+- **Consumed by**: the same CSS rule as above — `.revealed` on the hotzone overrides
   the `body.state-ready` hiding rule for the controls nested inside it.
-- **Independence**: the top and bottom hotzones/timers are entirely independent of
-  each other — hovering one never affects the other's visibility.
+- **Implementation**: `initControlZoneHover(zoneId)` in `js/scripts.js`, called once,
+  for `'top-controls'` only.
 
 ## Non-goals
 
@@ -38,6 +45,6 @@ either the load-state logic or the layout need to respect.
   corresponding on-screen controls are currently visible.
 - No keyboard-shortcut changes. Pressing `space`/`a`/`s`/`d`/`f`/`g`/`h`/`j` (or the
   physical pedal sending the same keys) continues to work identically regardless of
-  `body.state-ready` or either `.revealed` class's state.
+  `body.state-ready` or the `.revealed` class's state.
 - No touch/tap-based reveal mechanism (see spec Assumptions — out of scope this
   iteration).

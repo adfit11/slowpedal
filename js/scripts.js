@@ -741,10 +741,11 @@ function halveLoopLength() {
   updateLoopInputs();
 }
 
-// Hover-reveal for the two control overlays (Minimal Aesthetic Redesign feature).
-// Each zone reveals instantly on mouseenter and hides again after a short pause on
-// mouseleave (not instantly, to avoid flicker from incidental cursor movement) — see
-// contracts/control-overlay-behavior.md. The two zones' timers are independent.
+// Hover-reveal for the loading-controls overlay (Minimal Aesthetic Redesign feature).
+// Reveals instantly on mouseenter and hides again after a short pause on mouseleave
+// (not instantly, to avoid flicker from incidental cursor movement) — see
+// contracts/control-overlay-behavior.md. #bottom-controls no longer uses this — it's
+// always visible per the Persistent Bottom Controls feature.
 function initControlZoneHover(zoneId) {
   const zone = document.getElementById(zoneId);
   let hideTimeoutId = null;
@@ -762,7 +763,6 @@ function initControlZoneHover(zoneId) {
 }
 
 initControlZoneHover('top-controls');
-initControlZoneHover('bottom-controls');
 
 // Event listeners for the buttons
 document.getElementById('control-button').addEventListener('click', handleLoopControlClick);
