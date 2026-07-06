@@ -345,12 +345,14 @@
     left: 0;
   }
 
-  /* Playback/loop controls overlay: spans the bottom edge of the player area.
+  /* Playback/loop controls overlay: pinned to the browser viewport's bottom edge
+     (not #player-area's box), per contracts/bottom-controls-viewport-anchor.md —
+     #player-area can grow taller than the viewport on short windows, and an
+     absolute position anchored to it would push these controls below the fold.
      Unlike #top-controls, this zone is always visible — it never hides based on
-     load state, per the Persistent Bottom Controls feature. It keeps the overlay
-     position/scrim purely for visual consistency with the player. */
+     load state, per the Persistent Bottom Controls feature. */
   #bottom-controls {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
