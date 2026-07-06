@@ -14,6 +14,17 @@
 
 - Q: When the browser window is too short for the video player at its normal size plus the bottom controls, should the player shrink to make room (so nothing needs scrolling), or should the bottom controls stay fixed to the bottom of the browser window regardless (so the player may extend further down, off-screen, while the controls float in front of it)? → A: Pin the controls to the bottom of the browser window (viewport-fixed) — the controls are always visible without scrolling, but the video player keeps its normal sizing and may extend beyond the visible window on short windows, requiring a scroll to see the parts of the player that don't fit.
 
+### Session 2026-07-07 (Revision)
+
+- The pinned-controls approach above was implemented, committed, and verified working —
+  but on reflection the user changed their mind: **the player shrinking to fit is
+  preferred instead**. This session's decision supersedes the 2026-07-06 answer above
+  (left in place for history, per this project's practice of recording rather than
+  erasing prior decisions). The rest of this document reflects the new, current
+  direction: the whole page (header, player, timeline, controls) is constrained to fit
+  within the browser window's height, with the video player shrinking as needed so
+  nothing ever requires scrolling — not even on short windows.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Bottom controls stay reachable on any window size (Priority: P1)
@@ -28,54 +39,54 @@ shown, but can still end up positioned below the visible area on a short window,
 which defeats the purpose of making them permanent in the first place.
 
 **Independent Test**: Resize the browser window to a short height (e.g., a third of a
-typical laptop screen) with a video loaded, and confirm the playback/loop controls are
-still fully visible and clickable without scrolling — at every window height down to a
-reasonable practical minimum.
+typical laptop screen) with a video loaded, and confirm the entire page — including the
+playback/loop controls — remains fully visible and clickable without any scrolling, with
+the video player shrinking as needed to make room.
 
 **Acceptance Scenarios**:
 
 1. **Given** a video is loaded, **When** the browser window is resized shorter, **Then**
-   the playback/loop controls remain pinned to the bottom edge of the browser window
-   itself (not the bottom of the page content), staying fully visible and clickable
-   without any scrolling.
-2. **Given** the browser window is too short to show the entire video player at its
-   normal size above the pinned controls, **When** the user wants to see the parts of
-   the player that don't fit, **Then** the page may be scrolled to reveal them, but the
-   playback/loop controls stay fixed in place at the bottom of the window throughout
-   that scroll — they are never part of what scrolls away.
+   the video player shrinks as needed so that the header, player, timeline, and
+   playback/loop controls all remain visible within the window at once, with no
+   vertical scrolling required.
+2. **Given** an extremely short browser window, **When** there isn't enough room for
+   everything at a normal, usable size, **Then** the video player continues shrinking
+   rather than the page requiring a scroll — the playback/loop controls must never be
+   the part that gets compromised; if anything gives, it's the video player's size.
 3. **Given** the window is resized back to a taller size, **When** there is once again
-   enough room for the video player at its normal size, **Then** no scrolling is needed
-   and the layout looks exactly as it did before this feature (per the Minimal
-   Aesthetic Redesign and Persistent Bottom Controls features' existing behavior).
+   enough room, **Then** the video player grows back to its normal, larger size (per the
+   Minimal Aesthetic Redesign feature's sizing behavior), and the layout looks exactly
+   as it did before this feature.
 
 ---
 
 ### Edge Cases
 
+- Very short windows (e.g., under a few hundred pixels tall) may not have room for a
+  "usable" video size at all — the controls remaining visible and clickable, and no
+  scrolling ever being required, takes priority over the video maintaining a
+  comfortable minimum size in that extreme case.
 - Resizing the window while a loop is set or the video is playing must not interrupt
-  playback or reset the loop — only the controls' fixed positioning responds to the
-  resize.
+  playback or reset the loop — only the layout's sizing responds to the resize.
 - This applies to both the YouTube and local-file playback paths equally, since both
   render into the same player area.
-- The pinned controls bar must not permanently obscure part of the video player on tall
-  windows — it should only become a fixed overlay in front of the player when there
-  isn't enough vertical room, consistent with its current overlay presentation.
+- The video player's width and the timeline's width must shrink together and stay
+  visually aligned — the timeline must not end up wider or narrower than the
+  now-smaller player above it.
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
 - **FR-001**: The playback/loop controls at the bottom of the screen MUST remain
-  pinned to the bottom of the browser's visible viewport at all times, regardless of
-  the window's height or how far the page content is scrolled — they must never be
-  scrollable out of view.
-- **FR-002**: The video player and page layout otherwise keep their existing sizing
-  behavior (per the Minimal Aesthetic Redesign feature) unchanged; this feature does
-  not alter how large the player grows or shrinks.
-- **FR-003**: When the browser window is too short to show the full page (header,
-  player, timeline, and pinned controls) at once, the page MAY require scrolling to
-  view all of the video player, but the playback/loop controls themselves MUST remain
-  visible and clickable throughout, without needing to be scrolled into view.
+  fully visible and clickable within the browser window at all times, regardless of
+  the window's height, without requiring the user to scroll.
+- **FR-002**: The video player MUST reduce its size as needed to keep the header,
+  player, timeline, and playback/loop controls simultaneously visible within the
+  browser window's current height, with no vertical scrolling ever required.
+- **FR-003**: The video player MUST return to its normal, larger sizing (as
+  established by the Minimal Aesthetic Redesign feature) once the window is tall
+  enough again to accommodate it.
 - **FR-004**: This feature MUST NOT change the keyboard shortcut key mapping
   (Constitution Principle II) or introduce any new external dependency (Constitution
   Principle I).
@@ -83,19 +94,21 @@ reasonable practical minimum.
   hidden/shown based on load state — they remain permanently visible per the
   Persistent Bottom Controls feature; this feature only ensures that "visible" also
   means "within the browser window," not just "not faded out."
+- **FR-006**: The timeline's width MUST track the video player's current (possibly
+  shrunk) width, so the two remain visually aligned at every window size.
 
 ### Key Entities
 
-- No new data entities. This feature adjusts layout/positioning behavior only.
+- No new data entities. This feature adjusts layout/sizing behavior only.
 
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
 
-- **SC-001**: With a video loaded, the playback/loop controls are fully visible and
-  clickable without any scrolling at every browser window height from a typical
-  full-screen laptop display down to a small fraction of that height, verified across
-  a range of window sizes.
+- **SC-001**: With a video loaded, the entire page — header, player, timeline, and
+  playback/loop controls — is fully visible and clickable without scrolling at every
+  browser window height from a typical full-screen laptop display down to a small
+  fraction of that height, verified across a range of window sizes.
 - **SC-002**: Resizing the browser window taller or shorter does not interrupt video
   playback or reset an active loop.
 - **SC-003**: Zero regressions to the existing player-sizing behavior (growing to a
@@ -108,6 +121,7 @@ reasonable practical minimum.
   area), not the physical screen resolution — the same behavior applies whether the
   window is short because the screen itself is small or because the user has manually
   resized/repositioned the window.
-- On short windows, some vertical scrolling of the page content (to see the full video
-  player) is acceptable; what's not acceptable is the playback/loop controls being part
-  of what scrolls away.
+- No specific minimum player size is mandated; the video may become quite small on an
+  extremely short window. The requirement is that the controls stay visible and usable
+  and that nothing ever requires scrolling, not that the video stays above some minimum
+  size.

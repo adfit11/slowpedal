@@ -764,6 +764,34 @@ function initControlZoneHover(zoneId) {
 
 initControlZoneHover('top-controls');
 
+// Shrinks the video player (and keeps the timeline's width matching it) so the whole
+// page — header, player, timeline, and the playback/loop controls overlay — always
+// fits within the browser window's height with no scrolling, even on short windows.
+// See specs/005-viewport-fit-bottom-controls/contracts/viewport-fit-sizing.md.
+function fitPlayerToViewport() {
+  const header = document.querySelector('header');
+  const playerContainer = document.getElementById('player-container');
+  const timelineContainer = document.getElementById('timeline-container');
+  const mainContent = document.getElementById('main-content');
+
+  const mainContentPaddingTop = parseFloat(getComputedStyle(mainContent).paddingTop);
+  const timelineMarginTop = parseFloat(getComputedStyle(timelineContainer).marginTop);
+  const reservedHeight = header.offsetHeight
+    + timelineContainer.offsetHeight
+    + mainContentPaddingTop
+    + timelineMarginTop;
+
+  const availableHeight = Math.max(window.innerHeight - reservedHeight, 40);
+  const availableWidth = mainContent.clientWidth * 0.96;
+  const width = Math.min(availableWidth, 1500, availableHeight * (16 / 9));
+
+  playerContainer.style.width = `${width}px`;
+  timelineContainer.style.width = `${width}px`;
+}
+
+window.addEventListener('resize', fitPlayerToViewport);
+fitPlayerToViewport();
+
 // Event listeners for the buttons
 document.getElementById('control-button').addEventListener('click', handleLoopControlClick);
 document.getElementById('video-url').addEventListener('input', updateVideoUrlButtonVisibility);

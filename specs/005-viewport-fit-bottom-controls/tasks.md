@@ -5,8 +5,15 @@ description: "Task list for Bottom Controls Always Fit Within the Browser Window
 
 # Tasks: Bottom Controls Always Fit Within the Browser Window
 
+> **Revision (2026-07-07)**: Phases 1–3 below (T001–T007) implemented the original
+> "pin controls to the viewport" approach — completed, committed, and verified working.
+> The user then changed their mind in favor of shrinking the player to fit instead. See
+> the new **Phase 4: Revision** section for the tasks that implemented the actual,
+> current behavior. Phases 1–3 are left as a historical record, per this project's
+> practice of recording rather than erasing prior work.
+
 **Input**: Design documents from `/specs/005-viewport-fit-bottom-controls/`
-**Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/bottom-controls-viewport-anchor.md, quickstart.md
+**Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/viewport-fit-sizing.md, quickstart.md
 
 **Tests**: This repo has a dev-only Playwright suite (`tests/*.spec.js`). This feature adds
 new coverage for viewport-anchored positioning; no existing test currently asserts
@@ -61,6 +68,25 @@ beyond the fold) never carries the controls away with it.
 
 ---
 
+## Phase 4: Revision (2026-07-07) — Shrink the player to fit instead
+
+**Goal**: Supersede Phase 2's approach. Instead of pinning `#bottom-controls` to the
+viewport, shrink the video player (and keep the timeline's width matching it) so the
+entire page fits the browser window's height with no scrolling ever required — per the
+revised Clarifications answer in spec.md.
+
+- [X] T008 Revert `#bottom-controls` in `css/styles.css` from `position: fixed` back to `position: absolute` (anchored to `#player-area`, which is now guaranteed to fit the viewport — see T010–T011).
+- [X] T009 Add `fitPlayerToViewport()` to `js/scripts.js`: computes the available height (`window.innerHeight` minus header height, timeline height, and relevant padding/margin, floored at 40px) and sets `#player-container` and `#timeline-container`'s width to `min(96% of main-content's width, 1500px, availableHeight * 16/9)`. Bound to `window resize` and called once on load. See `contracts/viewport-fit-sizing.md`.
+- [X] T010 Remove `#player-container`'s old `min-height: 200px` in `css/styles.css` (conflicts with shrinking below 200px) and add `min-height: 0` explicitly — a flex item's default `min-height: auto` otherwise floors it at the `<video>` element's intrinsic 150px default height, ignoring the `aspect-ratio`-derived size. Discovered via live testing (see research.md's "`min-height: auto` pitfall").
+- [X] T011 Add `min-height: 0` to `#main-content` in `css/styles.css` — same `min-height: auto` flooring issue at the outer flex level, discovered via live testing (page-level scroll persisted even after T010 until this was added).
+- [X] T012 Rewrite `tests/viewport-fit.spec.js` to match the shrink-to-fit behavior: replaced the pin-to-viewport/scroll-independence assertions with (a) no page-level overflow at a short viewport, (b) player/timeline width-tracking, (c) no regression at a normal viewport, keeping (d) the resize-doesn't-interrupt-playback test as-is.
+- [X] T013 Manually validate live in-browser via Chrome automation at a short (~1200×208 effective viewport) and normal (~1400×647 effective viewport) window size: confirmed via `document.documentElement.scrollHeight <= clientHeight` (no overflow at either size), visually confirmed via screenshots that the player shrinks/grows correctly and the bottom controls/timeline stay visible, and confirmed the normal-size layout is visually unchanged from before this feature.
+- [X] T014 Run the full Playwright suite (`npm test`) after the revision; confirm no regressions. Result: 27/27 passing. Stress-tested with `--repeat-each=10`: 270/270 passing, no flakiness.
+
+**Checkpoint**: The revised User Story 1 behavior (shrink-to-fit) is fully functional and independently testable, superseding Phase 2.
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -68,6 +94,8 @@ beyond the fold) never carries the controls away with it.
 - **Setup (Phase 1)**: No dependencies — start immediately.
 - **User Story 1 (Phase 2)**: Depends only on Setup.
 - **Polish (Phase 3)**: Depends on all of User Story 1's tasks.
+- **Revision (Phase 4)**: Depends on Phase 3 being complete (it supersedes Phase 2's
+  approach, not Setup) — T008 → T009 → T010 → T011 → T012 → T013 → T014.
 
 ### Within User Story 1
 

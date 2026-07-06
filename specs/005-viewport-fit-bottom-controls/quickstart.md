@@ -11,39 +11,39 @@ python3 -m http.server 8080
 
 ## Scenarios
 
-### 1. Controls stay pinned on a short window (US1, Scenario 1)
+### 1. The whole page fits a short window, with no scrolling (US1, Scenario 1–2)
 
 - Load a video.
 - Resize the browser window to a short height (e.g., ~300–400px tall, wide enough to
   keep a normal aspect ratio).
-- **Expect**: the playback/loop controls remain fully visible at the bottom edge of the
-  browser window and clickable, with no scrolling needed to reach them.
+- **Expect**: the video player shrinks, and the header, player, timeline, and
+  playback/loop controls are all visible at once with no scrolling required — check
+  via devtools that `document.documentElement.scrollHeight <= document.documentElement.clientHeight`.
 
-### 2. Scrolling the player doesn't carry the controls away (US1, Scenario 2)
+### 2. Player and timeline stay the same width
 
-- With the same short window, scroll `#main-content` up/down (if there is anything to
-  scroll — the player may extend beyond the visible area).
-- **Expect**: the controls stay fixed at the bottom of the browser window throughout the
-  scroll — they never move with the scrolled content.
+- At the same short window size, compare `#player-container` and `#timeline-container`'s
+  rendered widths.
+- **Expect**: identical (or effectively identical) widths — they shrink together.
 
 ### 3. Normal-height windows are unchanged (US1, Scenario 3)
 
 - Resize the window back to a typical full-height size.
-- **Expect**: the layout looks exactly as before this feature — no scrolling needed, the
-  controls sit at the bottom of the player as an overlay, identical to the Persistent
-  Bottom Controls feature's behavior.
+- **Expect**: the layout looks exactly as before this feature — the player at its
+  normal large size, no scrolling needed, controls sitting at the bottom of the player
+  as an overlay.
 
 ### 4. Playback/loop state survives resize
 
 - Set a loop and start playback.
 - Resize the window shorter, then taller.
 - **Expect**: the loop stays intact and playback is uninterrupted throughout — only the
-  controls' positioning responds to the resize.
+  player's size responds to the resize.
 
 ### 5. No regressions
 
-- Run the full Playwright suite (`npm test`) — confirm new viewport-anchoring coverage
-  and every existing test still pass.
+- Run the full Playwright suite (`npm test`) — confirm the updated
+  `tests/viewport-fit.spec.js` and every other existing test still pass.
 - Confirm keyboard shortcuts (`space`, `a`, `s`, `d`, `f`, `g`, `h`, `j`) still work
   exactly as before.
 - Confirm no new `<script>`/`<link>` tags were added to `index.html`.

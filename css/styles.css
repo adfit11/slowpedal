@@ -85,6 +85,11 @@
   /* Main Content Styles */
   #main-content {
     flex: 1;
+    min-height: 0; /* Let this shrink below its content's natural size — required for
+                      fitPlayerToViewport() (js/scripts.js) to be able to shrink the
+                      player enough that the whole page fits the window with no
+                      scrolling; without this, a flex item's default min-height:auto
+                      would floor #main-content at its content's min size instead. */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -277,15 +282,21 @@
 
   /* Player container: grows to fill the space #top-controls/#bottom-controls
      reclaim when hidden, capped at a generous max-width rather than stretching
-     edge-to-edge on very large/ultrawide screens (spec FR-012). */
+     edge-to-edge on very large/ultrawide screens (spec FR-012). Its width is set
+     in px by fitPlayerToViewport() (js/scripts.js) on load/resize, so the whole
+     page always fits the browser window's height with no scrolling — see
+     specs/005-viewport-fit-bottom-controls/contracts/viewport-fit-sizing.md. The
+     96%/1500px values below are only the pre-JS fallback. */
   #player-container {
     width: 96%;
     max-width: 1500px;
+    min-height: 0; /* Override the flex item's automatic min-height (which would
+                      otherwise floor at the <video> element's intrinsic 150px
+                      default height, ignoring the aspect-ratio-derived size) */
     aspect-ratio: 16 / 9;
     position: relative;
     z-index: 1;
     flex-shrink: 0; /* Prevent from shrinking */
-    min-height: 200px; /* Set a minimum height */
     background-color: #000; /* Black background for video area */
     display: flex;
     align-items: center;
@@ -310,6 +321,8 @@
   }
 
   /* Custom Controls */
+  /* Width kept in sync with #player-container by fitPlayerToViewport() (same
+     computed px value); the 96%/1500px values below are only the pre-JS fallback. */
   #timeline-container {
     width: 96%; /* Match player-container width */
     max-width: 1500px; /* Match player-container max-width */
@@ -345,14 +358,14 @@
     left: 0;
   }
 
-  /* Playback/loop controls overlay: pinned to the browser viewport's bottom edge
-     (not #player-area's box), per contracts/bottom-controls-viewport-anchor.md —
-     #player-area can grow taller than the viewport on short windows, and an
-     absolute position anchored to it would push these controls below the fold.
-     Unlike #top-controls, this zone is always visible — it never hides based on
-     load state, per the Persistent Bottom Controls feature. */
+  /* Playback/loop controls overlay: spans the bottom edge of the player area.
+     #player-area is guaranteed to fit within the browser window (fitPlayerToViewport()
+     in js/scripts.js shrinks the player to make room — see
+     contracts/viewport-fit-sizing.md), so anchoring this overlay to #player-area's own
+     box is safe again. Unlike #top-controls, this zone is always visible — it never
+     hides based on load state, per the Persistent Bottom Controls feature. */
   #bottom-controls {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     right: 0;

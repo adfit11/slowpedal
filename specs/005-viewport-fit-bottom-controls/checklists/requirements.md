@@ -33,5 +33,7 @@
 
 - Items marked incomplete require spec updates before `/speckit-clarify` or `/speckit-plan`.
 - The one high-impact design fork (shrink-player-to-fit vs. pin-controls-to-viewport) was
-  resolved via an interactive question before this checklist was written; the answer
-  (pin controls to viewport bottom) is recorded in spec.md's Clarifications section.
+  resolved via an interactive question before this checklist was first written; the
+  initial answer (pin controls to viewport bottom) was implemented, then revised the
+  next day to shrink-player-to-fit instead. Both decisions are recorded in spec.md's
+  Clarifications section, with the 2026-07-07 revision superseding the original.
