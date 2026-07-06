@@ -1,1 +1,9 @@
 noGit/
+.DS_Store
+
+# Dev-only Playwright test tooling (does not affect the deployed static site)
+node_modules/
+test-results/
+playwright-report/
+playwright/.cache/
+tests/.cache/

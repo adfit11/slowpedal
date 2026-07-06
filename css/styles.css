@@ -85,8 +85,60 @@
     gap: 5px;
   }
 
+  /* Load state indicator */
+  .load-state-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #ccc;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
 
-  
+  .load-state-indicator[data-state="loading"] {
+    color: #f2c94c;
+  }
+
+  .load-state-indicator[data-state="loading"] #load-state-icon {
+    animation: load-state-spin 1s linear infinite;
+  }
+
+  .load-state-indicator[data-state="ready"] {
+    color: #2ecc71;
+  }
+
+  .load-state-indicator[data-state="failed"] {
+    color: #e74c3c;
+  }
+
+  @keyframes load-state-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Video source groups (distinguish YouTube URL vs local file affordances) */
+  .video-source {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+  }
+
+  .video-source-label {
+    font-size: 12px;
+    color: #cfcfcf;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+
+
   /* Local input */
   #top-controls input[type="file"] {
     font-size: 14px;

@@ -1,0 +1,11 @@
+{
+  "name": "slowpedal-tests",
+  "private": true,
+  "description": "Dev-only Playwright test suite for Slow Pedal. Does not affect the deployed static site (see specs/001-video-load-feedback/plan.md Complexity Tracking).",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}

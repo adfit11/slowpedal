@@ -21,24 +21,35 @@
       <h1>Slow Pedal</h1>
     </div>
     <div id="top-controls">
-      <div class="input-group">
-
-        <input type="text" id="video-url" placeholder="Enter YouTube video URL">
-        <button class="action-button small-button red-button" id="load-video" title="Load Video">
-          <i class="ri-youtube-fill"></i>
-        </button>
-
+      <div id="load-state-indicator" class="load-state-indicator" data-state="empty">
+        <i id="load-state-icon" class="ri-film-line"></i>
+        <span id="load-state-text">Nothing loaded</span>
       </div>
-      <div class="input-group">
+
+      <div class="video-source">
+        <span class="video-source-label">Paste a YouTube link</span>
+        <div class="input-group">
+
+          <input type="text" id="video-url" placeholder="Enter YouTube video URL">
+          <button class="action-button small-button red-button" id="load-video" title="Load Video">
+            <i class="ri-youtube-fill"></i>
+          </button>
+
+        </div>
+      </div>
+      <div class="video-source">
+        <span class="video-source-label">Choose a file from your computer</span>
+        <div class="input-group">
 
 
-          <input type="file" id="local-video-file" accept="video/*">
-          <label for="local-video-file" class="local-video-file-label">Select Local Video</label>
+            <input type="file" id="local-video-file" accept="video/*">
+            <label for="local-video-file" class="local-video-file-label">Select Local Video</label>
 
 
-        <button class="action-button small-button red-button" id="load-local-video" title="Load Local Video">
-          <i class="ri-folder-open-fill"></i>
-        </button>
+          <button class="action-button small-button red-button" id="load-local-video" title="Load Local Video">
+            <i class="ri-folder-open-fill"></i>
+          </button>
+        </div>
       </div>
 
     </div>

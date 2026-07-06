@@ -4,6 +4,11 @@ let playing = false;
 let loopInterval;
 let playbackInterval;
 
+// Load-state tracking: 'empty' | 'loading' | 'ready' | 'failed'
+let loadState = 'empty';
+let loadReason = null;
+let loadTimeoutId = null;
+
 // Create a unified VideoPlayer class to handle both YouTube and HTML5 video players
 class VideoPlayer {
   constructor() {
@@ -11,6 +16,8 @@ class VideoPlayer {
     this.youtubePlayer = null;
     this.html5Player = null;
     this.html5LoopHandler = null; // Added to manage the HTML5 loop handler
+    this.readyCallback = null;
+    this.errorCallback = null;
   }
 
   setYouTubePlayer(ytPlayer) {
@@ -21,6 +28,28 @@ class VideoPlayer {
   setHTML5Player(html5Player) {
     this.html5Player = html5Player;
     this.type = 'html5';
+  }
+
+  // Register a callback invoked once the currently-loading video is confirmed playable
+  onReady(callback) {
+    this.readyCallback = callback;
+  }
+
+  // Register a callback invoked when the currently-loading video fails; receives a short reason string
+  onError(callback) {
+    this.errorCallback = callback;
+  }
+
+  triggerReady() {
+    if (this.readyCallback) {
+      this.readyCallback();
+    }
+  }
+
+  triggerError(reason) {
+    if (this.errorCallback) {
+      this.errorCallback(reason);
+    }
   }
 
   play() {
@@ -122,6 +151,8 @@ class VideoPlayer {
 }
 
 let videoPlayer = new VideoPlayer();
+videoPlayer.onReady(setLoadReady);
+videoPlayer.onError(setLoadFailed);
 
 // Load YouTube IFrame API
 const tag = document.createElement('script');
@@ -134,20 +165,39 @@ function onYouTubeIframeAPIReady() {
     events: {
       'onReady': onPlayerReady,
       'onStateChange': onPlayerStateChange,
-      'onPlaybackRateChange': onPlayerPlaybackRateChange
+      'onPlaybackRateChange': onPlayerPlaybackRateChange,
+      'onError': onPlayerError
     }
   });
   videoPlayer.setYouTubePlayer(ytPlayer);
 }
 
 function onPlayerReady() {
+  // Note: this fires once when the YT.Player object itself is created (before
+  // any video is loaded), not per video load — so it must NOT signal load-state
+  // readiness. Readiness for an actual load is signaled from onPlayerStateChange
+  // instead, since loadVideoById() reliably triggers a state change.
   videoPlayer.setPlaybackRate(1);
   updateSpeedInput(); // Initialize speed input with current speed
   updateLoopSection();
   updateLoopInputs(); // Initialize input placeholders
 }
 
+function onPlayerError(event) {
+  const reasons = {
+    2: 'Invalid video',
+    5: 'Playback error',
+    100: 'Video not found',
+    101: 'Video unavailable',
+    150: 'Video unavailable'
+  };
+  videoPlayer.triggerError(reasons[event.data] || 'Failed to load video');
+}
+
 function onPlayerStateChange(event) {
+  if (loadState === 'loading') {
+    videoPlayer.triggerReady();
+  }
   if (videoPlayer.isPlaying()) {
     startLooping();
     startPlaybackMarker();
@@ -172,6 +222,19 @@ function onHTML5PlayerReady() {
   updateSpeedInput();
   updateLoopSection();
   updateLoopInputs();
+  videoPlayer.triggerReady();
+}
+
+function onHTML5PlayerError(event) {
+  const reasons = {
+    1: 'Loading aborted',
+    2: 'Network error',
+    3: 'Unsupported video format',
+    4: 'Unsupported video format'
+  };
+  const el = event.target;
+  const code = el && el.error ? el.error.code : 0;
+  videoPlayer.triggerError(reasons[code] || 'Failed to load video');
 }
 
 function onHTML5PlayerStateChange() {
@@ -276,46 +339,120 @@ function handleLoopControlClick() {
   }
 }
 
+function updateLoadStateUI() {
+  const indicator = document.getElementById('load-state-indicator');
+  const icon = document.getElementById('load-state-icon');
+  const text = document.getElementById('load-state-text');
+  if (!indicator || !icon || !text) return;
+
+  const icons = {
+    empty: 'ri-film-line',
+    loading: 'ri-loader-4-line',
+    ready: 'ri-checkbox-circle-fill',
+    failed: 'ri-error-warning-fill'
+  };
+  const labels = {
+    empty: 'Nothing loaded',
+    loading: 'Loading…',
+    ready: 'Ready',
+    failed: loadReason ? `Failed: ${loadReason}` : 'Failed'
+  };
+
+  indicator.setAttribute('data-state', loadState);
+  icon.className = icons[loadState];
+  text.textContent = labels[loadState];
+}
+
+function clearLoadTimeout() {
+  if (loadTimeoutId) {
+    clearTimeout(loadTimeoutId);
+    loadTimeoutId = null;
+  }
+}
+
+function startLoadTimeout() {
+  clearLoadTimeout();
+  loadTimeoutId = setTimeout(() => {
+    setLoadFailed('Timed out');
+  }, 15000);
+}
+
+function setLoadLoading() {
+  loadState = 'loading';
+  loadReason = null;
+  updateLoadStateUI();
+  startLoadTimeout();
+}
+
+function setLoadReady() {
+  clearLoadTimeout();
+  loadState = 'ready';
+  loadReason = null;
+  updateLoadStateUI();
+}
+
+function setLoadFailed(reason) {
+  clearLoadTimeout();
+  loadState = 'failed';
+  loadReason = reason;
+  updateLoadStateUI();
+}
+
 function extractVideoId(url) {
   const match = url.match(/(?:https?:\/\/)?(?:www\.)?youtube\.com\/.*v=([^&]+)|youtu\.be\/([^?&]+)/);
   return match ? match[1] || match[2] : null;
 }
 
 function loadVideo() {
+  if (loadState === 'loading') return; // Ignore overlapping load attempts (FR-007)
+
   const url = document.getElementById('video-url').value;
   const videoId = extractVideoId(url);
-  if (videoId) {
-    // Hide HTML5 player and show YouTube player
-    const html5PlayerElement = document.getElementById('html5-player');
-    html5PlayerElement.style.display = 'none';
-    document.getElementById('player').style.display = 'block';
-
-    videoPlayer.setYouTubePlayer(videoPlayer.youtubePlayer);
-
-    videoPlayer.youtubePlayer.loadVideoById(videoId);
-    videoPlayer.pause();
-    section.start = 0;
-    section.end = 0;
-    loopState = 0;
-    playing = false;
-    const controlButton = document.getElementById('control-button');
-    controlButton.innerHTML = '<i class="ri-loop-left-line"></i>';
-    controlButton.title = 'Set Loop Start';
-    stopLooping();
-    updateLoopSection();
-    updateLoopInputs();
-  } else {
-    alert("Invalid YouTube URL. Please enter a valid one.");
+  if (!videoId) {
+    setLoadFailed('Invalid YouTube URL');
+    return;
   }
+
+  // Stop whatever was previously loaded before switching (clears immediately, FR-008)
+  videoPlayer.pause();
+
+  setLoadLoading();
+
+  // Hide HTML5 player and show YouTube player
+  const html5PlayerElement = document.getElementById('html5-player');
+  html5PlayerElement.style.display = 'none';
+  document.getElementById('player').style.display = 'block';
+
+  videoPlayer.setYouTubePlayer(videoPlayer.youtubePlayer);
+
+  videoPlayer.youtubePlayer.loadVideoById(videoId);
+  videoPlayer.pause();
+  section.start = 0;
+  section.end = 0;
+  loopState = 0;
+  playing = false;
+  const controlButton = document.getElementById('control-button');
+  controlButton.innerHTML = '<i class="ri-loop-left-line"></i>';
+  controlButton.title = 'Set Loop Start';
+  stopLooping();
+  updateLoopSection();
+  updateLoopInputs();
 }
 
 function loadLocalVideo() {
+  if (loadState === 'loading') return; // Ignore overlapping load attempts (FR-007)
+
   const localVideoFileInput = document.getElementById('local-video-file');
   const file = localVideoFileInput.files[0];
   if (!file) {
     alert('Please select a video file.');
     return;
   }
+
+  // Stop whatever was previously loaded before switching (clears immediately, FR-008)
+  videoPlayer.pause();
+
+  setLoadLoading();
 
   const url = URL.createObjectURL(file);
 
@@ -350,6 +487,7 @@ function loadLocalVideo() {
   html5PlayerElement.addEventListener('play', onHTML5PlayerStateChange);
   html5PlayerElement.addEventListener('pause', onHTML5PlayerStateChange);
   html5PlayerElement.addEventListener('ratechange', onHTML5PlayerPlaybackRateChange);
+  html5PlayerElement.addEventListener('error', onHTML5PlayerError);
 
   // Ensure the video fills the container
   html5PlayerElement.style.objectFit = 'contain';
@@ -649,3 +787,6 @@ modalOverlay.addEventListener('click', (event) => {
     modalOverlay.style.display = 'none';
   }
 });
+
+// Initialize the load-state indicator
+updateLoadStateUI();
