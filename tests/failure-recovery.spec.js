@@ -6,23 +6,20 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { test, expect } = require('@playwright/test');
-const { openApp, getLoadState, loadYouTubeUrlAndGetState } = require('./helpers/app');
+const { openApp, loadYouTubeUrlAndGetState } = require('./helpers/app');
 
 test.describe('User Story 3 - failure and recovery', () => {
   test('invalid YouTube URL fails immediately with a reason (Scenario 1)', async ({ page }) => {
     await openApp(page);
     const indicator = page.locator('#load-state-indicator');
 
-    await page.fill('#video-url', 'not a youtube url');
-    await page.click('#load-video');
-
     // Synchronous client-side validation — no async round-trip involved.
-    expect(await getLoadState(page)).toBe('failed');
+    const state = await loadYouTubeUrlAndGetState(page, 'not a youtube url');
+    expect(state).toBe('failed');
     await expect(page.locator('#load-state-text')).toHaveText('Failed: Invalid YouTube URL');
 
     // Immediately retryable, no reload required (FR-009).
-    await page.fill('#video-url', 'https://www.youtube.com/watch?v=FAKE_OK_ID');
-    await page.click('#load-video');
+    await loadYouTubeUrlAndGetState(page, 'https://www.youtube.com/watch?v=FAKE_OK_ID');
     await expect(indicator).toHaveAttribute('data-state', 'ready', { timeout: 2000 });
   });
 
@@ -45,9 +42,8 @@ test.describe('User Story 3 - failure and recovery', () => {
     const garbagePath = path.join(os.tmpdir(), `slowpedal-garbage-${Date.now()}.mp4`);
     fs.writeFileSync(garbagePath, Buffer.from('this is not a real video file'));
 
+    // Selecting a file reveals the "Load" button; clicking it triggers the load.
     await page.setInputFiles('#local-video-file', garbagePath);
-    // See load-state.spec.js: native file-decode timing is racy to observe
-    // mid-transition, so this only asserts the eventual outcome.
     await page.click('#load-local-video');
 
     await expect(indicator).toHaveAttribute('data-state', 'failed', { timeout: 5000 });

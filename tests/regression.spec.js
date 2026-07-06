@@ -3,7 +3,7 @@
 // (keyboard shortcuts stay in sync with the pedal firmware).
 
 const { test, expect } = require('@playwright/test');
-const { openApp } = require('./helpers/app');
+const { openApp, loadYouTubeUrlAndGetState } = require('./helpers/app');
 
 test.describe('Regressions', () => {
   test('no new runtime dependencies were introduced (Constitution Principle I)', async ({ page }) => {
@@ -27,8 +27,7 @@ test.describe('Regressions', () => {
   test('speed keyboard shortcuts still work after a video is loaded (Principle II)', async ({ page }) => {
     await openApp(page);
 
-    await page.fill('#video-url', 'https://www.youtube.com/watch?v=FAKE_OK_ID');
-    await page.click('#load-video');
+    await loadYouTubeUrlAndGetState(page, 'https://www.youtube.com/watch?v=FAKE_OK_ID');
     await expect(page.locator('#load-state-indicator')).toHaveAttribute('data-state', 'ready', { timeout: 2000 });
 
     const speedInput = page.locator('#speed-input');

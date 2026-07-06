@@ -425,8 +425,12 @@ function loadVideo() {
 
   videoPlayer.setYouTubePlayer(videoPlayer.youtubePlayer);
 
-  videoPlayer.youtubePlayer.loadVideoById(videoId);
-  videoPlayer.pause();
+  // cueVideoById (rather than loadVideoById + pause) loads the video's thumbnail
+  // and prepares it for playback without attempting to autoplay — loadVideoById
+  // starts playing immediately, and pausing right after can leave the player
+  // showing a blank black frame instead of the video's thumbnail, especially
+  // when this isn't triggered by a fresh, direct user gesture.
+  videoPlayer.youtubePlayer.cueVideoById(videoId);
   section.start = 0;
   section.end = 0;
   loopState = 0;
@@ -437,6 +441,21 @@ function loadVideo() {
   stopLooping();
   updateLoopSection();
   updateLoopInputs();
+}
+
+// The load buttons stay hidden until their input actually has something to load,
+// so there's no unlabeled control to discover before it's relevant — but loading
+// itself is still an explicit, deliberate click.
+function updateVideoUrlButtonVisibility() {
+  const button = document.getElementById('load-video');
+  const hasContent = document.getElementById('video-url').value.trim().length > 0;
+  button.style.display = hasContent ? 'inline-block' : 'none';
+}
+
+function updateLocalFileButtonVisibility() {
+  const button = document.getElementById('load-local-video');
+  const hasFile = document.getElementById('local-video-file').files.length > 0;
+  button.style.display = hasFile ? 'inline-block' : 'none';
 }
 
 function loadLocalVideo() {
@@ -719,7 +738,9 @@ function halveLoopLength() {
 
 // Event listeners for the buttons
 document.getElementById('control-button').addEventListener('click', handleLoopControlClick);
+document.getElementById('video-url').addEventListener('input', updateVideoUrlButtonVisibility);
 document.getElementById('load-video').addEventListener('click', loadVideo);
+document.getElementById('local-video-file').addEventListener('change', updateLocalFileButtonVisibility);
 document.getElementById('load-local-video').addEventListener('click', loadLocalVideo);
 document.getElementById('start-stop-button').addEventListener('click', togglePlayPause);
 document.getElementById('speed-up-button').addEventListener('click', () => adjustPlaybackRate(0.1));

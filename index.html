@@ -31,9 +31,7 @@
         <div class="input-group">
 
           <input type="text" id="video-url" placeholder="Enter YouTube video URL">
-          <button class="action-button small-button red-button" id="load-video" title="Load Video">
-            <i class="ri-youtube-fill"></i>
-          </button>
+          <button class="load-trigger-button" id="load-video" style="display: none;">Load</button>
 
         </div>
       </div>
@@ -44,11 +42,9 @@
 
             <input type="file" id="local-video-file" accept="video/*">
             <label for="local-video-file" class="local-video-file-label">Select Local Video</label>
+            <button class="load-trigger-button" id="load-local-video" style="display: none;">Load</button>
 
 
-          <button class="action-button small-button red-button" id="load-local-video" title="Load Local Video">
-            <i class="ri-folder-open-fill"></i>
-          </button>
         </div>
       </div>
 

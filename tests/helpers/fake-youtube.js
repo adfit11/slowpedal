@@ -3,9 +3,9 @@
 // tests never depend on real YouTube availability/network/rate limits.
 //
 // Special video IDs (used as the "v=" param in test URLs) drive scenarios:
-//   FAKE_INVALID_ID  -> onError fires shortly after loadVideoById (unplayable video)
-//   FAKE_NEVER_LOADS -> loadVideoById never calls back (drives the 15s timeout path)
-//   anything else    -> onStateChange fires shortly after loadVideoById (successful load)
+//   FAKE_INVALID_ID  -> onError fires shortly after cueVideoById (unplayable video)
+//   FAKE_NEVER_LOADS -> cueVideoById never calls back (drives the 15s timeout path)
+//   anything else    -> onStateChange fires shortly after cueVideoById (successful load)
 
 const FAKE_YOUTUBE_API_SOURCE = `
 (function () {
@@ -22,7 +22,7 @@ const FAKE_YOUTUBE_API_SOURCE = `
     }, 0);
   }
 
-  Player.prototype.loadVideoById = function (videoId) {
+  Player.prototype.cueVideoById = function (videoId) {
     var self = this;
     if (videoId === 'FAKE_INVALID_ID') {
       setTimeout(function () {
@@ -36,12 +36,14 @@ const FAKE_YOUTUBE_API_SOURCE = `
       return; // deliberately never calls back
     }
     setTimeout(function () {
-      self._state = 2; // PAUSED (matches the app's own pause() call right after loading)
+      self._state = 5; // CUED (matches the app's real cueVideoById call, showing a thumbnail without playing)
       if (self._config.events && self._config.events.onStateChange) {
-        self._config.events.onStateChange({ target: self, data: 2 });
+        self._config.events.onStateChange({ target: self, data: 5 });
       }
     }, 50);
   };
+  // Kept as an alias in case anything still references the older API shape.
+  Player.prototype.loadVideoById = Player.prototype.cueVideoById;
 
   Player.prototype.playVideo = function () { this._state = 1; };
   Player.prototype.pauseVideo = function () { this._state = 2; };

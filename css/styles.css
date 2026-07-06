@@ -137,6 +137,24 @@
     letter-spacing: 0.03em;
   }
 
+  /* Load trigger button: hidden until its input has content, per JS toggle */
+  .load-trigger-button {
+    height: 30px;
+    padding: 0 14px;
+    border-radius: 15px;
+    background-color: #e50914;
+    color: #fff;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .load-trigger-button:hover {
+    background-color: #bf0810;
+  }
+
 
 
   /* Local input */
@@ -198,16 +216,6 @@
     cursor: pointer;
     transition: background-color 0.2s, transform 0.2s;
     position: relative;
-  }
-
-  /* Red Button Style */
-  .action-button.red-button {
-    background-color: #e50914; /* Red color */
-    color: #fff; /* White icon */
-  }
-
-  .action-button.red-button:hover {
-    background-color: #bf0810;
   }
 
   /* Player container */
