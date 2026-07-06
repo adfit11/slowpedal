@@ -382,6 +382,9 @@ function setLoadLoading() {
   loadReason = null;
   updateLoadStateUI();
   startLoadTimeout();
+  // Loading/playback controls are always visible except while "ready" (Minimal
+  // Aesthetic Redesign feature) — see contracts/control-overlay-behavior.md.
+  document.body.classList.remove('state-ready');
 }
 
 function setLoadReady() {
@@ -389,6 +392,7 @@ function setLoadReady() {
   loadState = 'ready';
   loadReason = null;
   updateLoadStateUI();
+  document.body.classList.add('state-ready');
 }
 
 function setLoadFailed(reason) {
@@ -396,6 +400,7 @@ function setLoadFailed(reason) {
   loadState = 'failed';
   loadReason = reason;
   updateLoadStateUI();
+  document.body.classList.remove('state-ready');
 }
 
 function extractVideoId(url) {
@@ -735,6 +740,29 @@ function halveLoopLength() {
   updateLoopSection();
   updateLoopInputs();
 }
+
+// Hover-reveal for the two control overlays (Minimal Aesthetic Redesign feature).
+// Each zone reveals instantly on mouseenter and hides again after a short pause on
+// mouseleave (not instantly, to avoid flicker from incidental cursor movement) — see
+// contracts/control-overlay-behavior.md. The two zones' timers are independent.
+function initControlZoneHover(zoneId) {
+  const zone = document.getElementById(zoneId);
+  let hideTimeoutId = null;
+
+  zone.addEventListener('mouseenter', () => {
+    clearTimeout(hideTimeoutId);
+    zone.classList.add('revealed');
+  });
+
+  zone.addEventListener('mouseleave', () => {
+    hideTimeoutId = setTimeout(() => {
+      zone.classList.remove('revealed');
+    }, 600);
+  });
+}
+
+initControlZoneHover('top-controls');
+initControlZoneHover('bottom-controls');
 
 // Event listeners for the buttons
 document.getElementById('control-button').addEventListener('click', handleLoopControlClick);

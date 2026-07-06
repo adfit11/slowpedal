@@ -1,3 +1,21 @@
+  /* Palette derived from img/slowLogo.png's existing dark-navy/off-white two-tone
+     design, refined into a single cohesive monochrome theme with one accent color. */
+  :root {
+    --color-bg: #1c1b22;
+    --color-surface: #2a2933;
+    --color-surface-translucent: rgba(28, 27, 34, 0.85);
+    --color-text: #f2efe9;
+    --color-text-muted: #9a97a3;
+    --color-border: rgba(242, 239, 233, 0.14);
+    --color-accent: #e2483d;
+    --color-accent-hover: #c93a30;
+
+    /* Load-state signal colors: functional status indicators, not brand accents */
+    --color-state-loading: #f2c94c;
+    --color-state-ready: #4cd97b;
+    --color-state-failed: #ef5350;
+  }
+
   /* Global Styles */
   body {
     margin: 0;
@@ -5,12 +23,12 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #f0f0f0; /* Light grey background */
+    background-color: var(--color-bg);
   }
 
   /* Header Styles */
   header {
-    background-color: #34323e; /* Dark background matching the logo */
+    background-color: var(--color-surface);
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -18,6 +36,7 @@
     position: sticky;
     top: 0;
     z-index: 1000;
+    border-bottom: 1px solid var(--color-border);
   }
 
   header .logo-container {
@@ -33,7 +52,7 @@
   header h1 {
     font-size: 28px;
     margin: 0;
-    color: #fff; /* White text to contrast the dark background */
+    color: var(--color-text);
   }
 
   header .header-buttons {
@@ -43,19 +62,20 @@
   }
 
   header .header-button {
-    background-color: #34323e; /* same as BG */
-    color: #fff;
-    padding: 0px 15px 3px ;
-    /* border-radius: 5px; */
-    border: 1px solid #fff;
+    background-color: transparent;
+    color: var(--color-text);
+    padding: 0px 15px 3px;
+    border-radius: 15px;
+    border: 1px solid var(--color-border);
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, border-color 0.2s;
     height: 30px;
   }
 
   header .header-button:hover {
-    background-color: #bf0810;
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
   }
 
   /* Main Content Styles */
@@ -69,13 +89,46 @@
     padding-top: 20px; /* Space under the header */
   }
 
+  /* Player area: relative positioning context for the two hover-reveal overlays
+     (#top-controls, #bottom-controls) and the player itself. See
+     contracts/control-overlay-behavior.md. */
+  #player-area {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+
+  /* Loading controls overlay: spans the top edge of the player area. Its own
+     pointer-events stay normal at all times (it's the hover "hotzone"); only its
+     direct children fade/disable, per the two rules below. */
   #top-controls {
-    margin: 10px;
-    flex-shrink: 0; /* Prevent from shrinking */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
+    padding: 16px 20px;
+    background: linear-gradient(to bottom, var(--color-surface-translucent), transparent);
+  }
+
+  body.state-ready #top-controls > * {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  body.state-ready #top-controls.revealed > * {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   /* Input Group Styles */
@@ -93,13 +146,13 @@
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 14px;
-    color: #ccc;
-    background-color: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
   }
 
   .load-state-indicator[data-state="loading"] {
-    color: #f2c94c;
+    color: var(--color-state-loading);
   }
 
   .load-state-indicator[data-state="loading"] #load-state-icon {
@@ -107,11 +160,11 @@
   }
 
   .load-state-indicator[data-state="ready"] {
-    color: #2ecc71;
+    color: var(--color-state-ready);
   }
 
   .load-state-indicator[data-state="failed"] {
-    color: #e74c3c;
+    color: var(--color-state-failed);
   }
 
   @keyframes load-state-spin {
@@ -126,13 +179,13 @@
     align-items: center;
     gap: 4px;
     padding: 8px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
   }
 
   .video-source-label {
     font-size: 12px;
-    color: #cfcfcf;
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.03em;
   }
@@ -142,8 +195,8 @@
     height: 30px;
     padding: 0 14px;
     border-radius: 15px;
-    background-color: #e50914;
-    color: #fff;
+    background-color: var(--color-accent);
+    color: var(--color-text);
     border: none;
     font-size: 13px;
     font-weight: 600;
@@ -152,7 +205,7 @@
   }
 
   .load-trigger-button:hover {
-    background-color: #bf0810;
+    background-color: var(--color-accent-hover);
   }
 
 
@@ -160,12 +213,12 @@
   /* Local input */
   #top-controls input[type="file"] {
     font-size: 14px;
-    color: #ffffff;
-    border: 1px solid #ccc;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     width: 250px;
     height: 30px;
-    background-color: #fff;
+    background-color: var(--color-bg);
     padding: 0px;
   }
 
@@ -174,7 +227,7 @@
     font-size: 14px;
     position: relative;
     left: -170px;
-    color: #757575;
+    color: var(--color-text-muted);
     margin-right: -120px;
   }
 
@@ -184,23 +237,23 @@
     position: relative;
     top: 3px;
     left: 3px;
-    border: 2px solid #d6d6d6;
+    border: 1px solid var(--color-border);
     padding: 0.2em 0.4em;
     border-radius: 0.2em;
-    background-color: #d6d6d6;
+    background-color: var(--color-surface);
+    color: var(--color-text);
   }
 
   /* YouTube input */
   #top-controls input[type="text"] {
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
     width: 250px;
     height: 30px;
-    background-color: #fff;
+    background-color: var(--color-bg);
     padding-left: 7px;
-    color: #000000;
-
+    color: var(--color-text);
   }
 
   /* Small Action Buttons */
@@ -218,12 +271,15 @@
     position: relative;
   }
 
-  /* Player container */
+  /* Player container: grows to fill the space #top-controls/#bottom-controls
+     reclaim when hidden, capped at a generous max-width rather than stretching
+     edge-to-edge on very large/ultrawide screens (spec FR-012). */
   #player-container {
-    width: 90%; 
-    max-width: 900px; 
+    width: 96%;
+    max-width: 1500px;
     aspect-ratio: 16 / 9;
-    position: relative; /* For positioning timeline elements */
+    position: relative;
+    z-index: 1;
     flex-shrink: 0; /* Prevent from shrinking */
     min-height: 200px; /* Set a minimum height */
     background-color: #000; /* Black background for video area */
@@ -251,8 +307,8 @@
 
   /* Custom Controls */
   #timeline-container {
-    width: 90%; /* Match player-container width */
-    max-width: 900px; /* Match player-container max-width */
+    width: 96%; /* Match player-container width */
+    max-width: 1500px; /* Match player-container max-width */
     position: relative;
     height: 20px;
     margin-top: 10px;
@@ -285,16 +341,32 @@
     left: 0;
   }
 
-  /* Bottom controls */
+  /* Playback/loop controls overlay: spans the bottom edge of the player area.
+     Same hotzone pattern as #top-controls — see contracts/control-overlay-behavior.md. */
   #bottom-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
-    flex-shrink: 0; /* Prevent from shrinking */
-    margin-top: 20px; /* Added spacing above input controls */
+    padding: 16px 20px;
+    background: linear-gradient(to top, var(--color-surface-translucent), transparent);
+  }
+
+  body.state-ready #bottom-controls > * {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  body.state-ready #bottom-controls.revealed > * {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .action-button {
@@ -305,11 +377,11 @@
     align-items: center;
     justify-content: center;
     font-size: 24px; /* Increase icon size */
-    color: #fff; /* Icon color */
-    background-color: #888; /* Default background color */
-    border: none; /* Remove border */
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: none;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
+    transition: background-color 0.2s, transform 0.2s, border-color 0.2s;
     position: relative; /* For tooltip positioning */
   }
 
@@ -328,8 +400,9 @@
     top: -35px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #333;
-    color: #fff;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
     padding: 5px 8px;
     border-radius: 4px;
     white-space: nowrap;
@@ -365,8 +438,10 @@
     width: 50px;
     padding: 5px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 5px;
+    background-color: var(--color-bg);
+    color: var(--color-text);
   }
 
   #loop-inputs input::placeholder {
@@ -388,68 +463,46 @@
     gap: 5px;
   }
 
-  /* Color palette */
-  /* Start Video Button - Blue */
+  /* Monochrome button palette (Minimal Aesthetic Redesign): a single accent color
+     reserved for the primary play/pause action; every other button is neutral at
+     rest, with the accent used consistently as hover/interaction feedback across
+     all of them. Replaces the previous per-button rainbow (blue/green/red/yellow). */
   .action-button.start-stop {
-    background-color: #4169e1;
+    background-color: var(--color-accent);
   }
   .action-button.start-stop:hover {
-    background-color: #3655b5;
+    background-color: var(--color-accent-hover);
   }
 
-  /* Loop Control Button - Black */
   .action-button.loop-control {
-    background-color: #000;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
     margin-right: 15px;
   }
-  .action-button.loop-control:hover {
-    background-color: #333;
-  }
 
-  /* Set Loop Button */
-  .action-button.set-loop {
-    background-color: #000;
-  }
-  .action-button.set-loop:hover {
-    background-color: #333;
-  }
-
-  /* Set Speed Button */
-  .action-button.set-speed {
-    background-color: #28A745;
-  }
-  .action-button.set-speed:hover {
-    background-color: #1e7e34;
-  }
-
-  /* Speed Up and Slow Down  */
+  .action-button.set-loop,
+  .action-button.set-speed,
   .action-button.speed-up,
-  .action-button.slow-down {
-    background-color: #28A745;
-  }
-  .action-button.speed-up:hover,
-  .action-button.slow-down:hover {
-    background-color: #1e7e34;
-  }
-
-  /* Shift Loop Backward and Forward */
+  .action-button.slow-down,
   .action-button.shift-loop-backward,
-  .action-button.shift-loop-forward {
-    background-color: #e21010;
-  }
-  .action-button.shift-loop-backward:hover,
-  .action-button.shift-loop-forward:hover {
-    background-color: #be0e0e;
-  }
-
-  /* Double and Halve Loop Length */
+  .action-button.shift-loop-forward,
   .action-button.double-loop-length,
   .action-button.halve-loop-length {
-    background-color: #dccb11;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
   }
+
+  .action-button.loop-control:hover,
+  .action-button.set-loop:hover,
+  .action-button.set-speed:hover,
+  .action-button.speed-up:hover,
+  .action-button.slow-down:hover,
+  .action-button.shift-loop-backward:hover,
+  .action-button.shift-loop-forward:hover,
   .action-button.double-loop-length:hover,
   .action-button.halve-loop-length:hover {
-    background-color: #c8b910;
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
   }
 
   /* Modal Styles */
@@ -467,18 +520,24 @@
   }
 
   #modal-content {
-    background-color: #fff;
+    background-color: var(--color-surface);
+    color: var(--color-text);
     padding: 20px;
     width: 75%;
     max-width: 800px;
     max-height: 80%;
     overflow-y: auto;
     border-radius: 10px;
+    border: 1px solid var(--color-border);
     position: relative;
   }
 
   #modal-content h2 {
     margin-top: 0;
+  }
+
+  #modal-content a {
+    color: var(--color-accent);
   }
 
   #modal-close-button {
@@ -489,9 +548,9 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: #888;
+    color: var(--color-text-muted);
   }
 
   #modal-close-button:hover {
-    color: #000;
+    color: var(--color-text);
   }

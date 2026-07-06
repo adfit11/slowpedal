@@ -20,35 +20,6 @@
       <img src="img/slowLogo.png" alt="Slow Pedal Logo">
       <h1>Slow Pedal</h1>
     </div>
-    <div id="top-controls">
-      <div id="load-state-indicator" class="load-state-indicator" data-state="empty">
-        <i id="load-state-icon" class="ri-film-line"></i>
-        <span id="load-state-text">Nothing loaded</span>
-      </div>
-
-      <div class="video-source">
-        <span class="video-source-label">Paste a YouTube link</span>
-        <div class="input-group">
-
-          <input type="text" id="video-url" placeholder="Enter YouTube video URL">
-          <button class="load-trigger-button" id="load-video" style="display: none;">Load</button>
-
-        </div>
-      </div>
-      <div class="video-source">
-        <span class="video-source-label">Choose a file from your computer</span>
-        <div class="input-group">
-
-
-            <input type="file" id="local-video-file" accept="video/*">
-            <label for="local-video-file" class="local-video-file-label">Select Local Video</label>
-            <button class="load-trigger-button" id="load-local-video" style="display: none;">Load</button>
-
-
-        </div>
-      </div>
-
-    </div>
     <div class="header-buttons">
       <button class="header-button" id="info-button">About</button>
       <button class="header-button" onclick="window.open('https://github.com/adfit11/slowpedal', '_blank')">Build</button>
@@ -90,43 +61,80 @@
   <!-- Main Content -->
   <div id="main-content">
 
+    <!-- Player area: player-container plus the two hover-revealed control
+         overlays (loading controls on top, playback/loop controls on bottom).
+         Both overlays hide once a video is "ready" (body.state-ready) unless
+         hovered — see contracts/control-overlay-behavior.md. -->
+    <div id="player-area">
 
-    <!-- Player container -->
-    <div id="player-container">
-      <div id="player"></div>
-      <!-- Added HTML5 video player with controls -->
-      <video id="html5-player" controls></video>
+      <!-- Loading controls overlay -->
+      <div id="top-controls">
+        <div id="load-state-indicator" class="load-state-indicator" data-state="empty">
+          <i id="load-state-icon" class="ri-film-line"></i>
+          <span id="load-state-text">Nothing loaded</span>
+        </div>
+
+        <div class="video-source">
+          <span class="video-source-label">Paste a YouTube link</span>
+          <div class="input-group">
+
+            <input type="text" id="video-url" placeholder="Enter YouTube video URL">
+            <button class="load-trigger-button" id="load-video" style="display: none;">Load</button>
+
+          </div>
+        </div>
+        <div class="video-source">
+          <span class="video-source-label">Choose a file from your computer</span>
+          <div class="input-group">
+
+
+              <input type="file" id="local-video-file" accept="video/*">
+              <label for="local-video-file" class="local-video-file-label">Select Local Video</label>
+              <button class="load-trigger-button" id="load-local-video" style="display: none;">Load</button>
+
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Player container -->
+      <div id="player-container">
+        <div id="player"></div>
+        <!-- Added HTML5 video player with controls -->
+        <video id="html5-player" controls></video>
+      </div>
+
+      <!-- Playback/loop controls overlay -->
+      <div id="bottom-controls">
+        <button class="action-button start-stop" id="start-stop-button" title="Start Video - Spacebar"><i class="ri-play-mini-fill"></i></button>
+        <button class="action-button slow-down" id="slow-down-button" title="Slow Down - A"><i class="ri-rewind-mini-fill"></i></button>
+        <button class="action-button speed-up" id="speed-up-button" title="Speed Up - S"><i class="ri-speed-mini-fill"></i></button>
+        <button class="action-button shift-loop-backward" id="shift-loop-backward-button" title="Shift Loop Backward - D"><i class="ri-arrow-left-s-line"></i></button>
+        <button class="action-button shift-loop-forward" id="shift-loop-forward-button" title="Shift Loop Forward - F"><i class="ri-arrow-right-s-line"></i></button>
+        <button class="action-button halve-loop-length" id="halve-loop-length-button" title="Halve Loop Length - G"><i class="ri-subtract-line"></i></button>
+        <button class="action-button double-loop-length" id="double-loop-length-button" title="Double Loop Length - H"><i class="ri-add-line"></i></button>
+        <button class="action-button loop-control" id="control-button" title="Set Loop Start - J"><i class="ri-loop-left-line"></i></button>
+
+        <div id="loop-inputs">
+          <div class="input-group">
+            <input type="text" id="speed-input" placeholder="Speed (%)" title="Enter Speed as Percentage">
+            <button class="action-button set-speed small-button" id="set-speed-button" title="Set Speed"><i class="ri-check-line"></i></button>
+          </div>
+          <div class="input-group">
+            <input type="text" id="loop-start-input" placeholder="M:SS" title="Loop Start">
+            <input type="text" id="loop-end-input" placeholder="M:SS" title="Loop End">
+            <button class="action-button set-loop small-button" id="set-loop-button" title="Set Loop"><i class="ri-check-line"></i></button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- Timeline visualization -->
+    <!-- Timeline visualization: always visible, never part of the hide/reveal behavior -->
     <div id="timeline-container">
       <div id="timeline">
         <div id="loop-section"></div>
         <div id="playback-marker"></div>
-      </div>
-    </div>
-
-    <!-- Bottom controls -->
-    <div id="bottom-controls">
-      <button class="action-button start-stop" id="start-stop-button" title="Start Video - Spacebar"><i class="ri-play-mini-fill"></i></button>
-      <button class="action-button slow-down" id="slow-down-button" title="Slow Down - A"><i class="ri-rewind-mini-fill"></i></button>
-      <button class="action-button speed-up" id="speed-up-button" title="Speed Up - S"><i class="ri-speed-mini-fill"></i></button>
-      <button class="action-button shift-loop-backward" id="shift-loop-backward-button" title="Shift Loop Backward - D"><i class="ri-arrow-left-s-line"></i></button>
-      <button class="action-button shift-loop-forward" id="shift-loop-forward-button" title="Shift Loop Forward - F"><i class="ri-arrow-right-s-line"></i></button>
-      <button class="action-button halve-loop-length" id="halve-loop-length-button" title="Halve Loop Length - G"><i class="ri-subtract-line"></i></button>
-      <button class="action-button double-loop-length" id="double-loop-length-button" title="Double Loop Length - H"><i class="ri-add-line"></i></button>
-      <button class="action-button loop-control" id="control-button" title="Set Loop Start - J"><i class="ri-loop-left-line"></i></button>
-
-      <div id="loop-inputs">
-        <div class="input-group">
-          <input type="text" id="speed-input" placeholder="Speed (%)" title="Enter Speed as Percentage">
-          <button class="action-button set-speed small-button" id="set-speed-button" title="Set Speed"><i class="ri-check-line"></i></button>
-        </div>
-        <div class="input-group">
-          <input type="text" id="loop-start-input" placeholder="M:SS" title="Loop Start">
-          <input type="text" id="loop-end-input" placeholder="M:SS" title="Loop End">
-          <button class="action-button set-loop small-button" id="set-loop-button" title="Set Loop"><i class="ri-check-line"></i></button>
-        </div>
       </div>
     </div>
   </div>
