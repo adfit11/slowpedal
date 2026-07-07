@@ -465,8 +465,13 @@ function updateVideoUrlButtonVisibility() {
 
 function updateLocalFileButtonVisibility() {
   const button = document.getElementById('load-local-video');
-  const hasFile = document.getElementById('local-video-file').files.length > 0;
-  button.style.display = hasFile ? 'inline-block' : 'none';
+  const file = document.getElementById('local-video-file').files[0];
+  button.style.display = file ? 'inline-block' : 'none';
+
+  // Also keep the visible filename status in sync — the native file input
+  // itself is hidden (see .visually-hidden-file-input in css/styles.css), so
+  // this element is the only place the current selection is displayed.
+  document.getElementById('local-video-filename').textContent = file ? file.name : 'No file chosen';
 }
 
 function loadLocalVideo() {

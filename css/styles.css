@@ -219,38 +219,59 @@
 
 
 
-  /* Local input */
-  #top-controls input[type="file"] {
-    font-size: 14px;
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    border-radius: 5px;
-    width: 250px;
-    height: 30px;
-    background-color: var(--color-bg);
-    padding: 0px;
+  /* Local file input: visually hidden but stays functional/keyboard- and
+     screen-reader-accessible (never display:none) — its <label> below is the
+     sole visible trigger; clicking/activating a label still opens the native
+     file picker for a hidden-but-not-display:none input. See
+     specs/006-fix-file-picker-overlap/research.md for why the native input's
+     own "Choose file" button + filename text can no longer be shown directly:
+     there's no CSS hook to suppress just its filename portion, so any overlay
+     of custom text at a fixed offset always collided with it. */
+  .visually-hidden-file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
-  /* Custom label for local file selector */
+  /* Local file selector's visible trigger button (the <label>, now that the
+     native input itself is hidden above). */
   .local-video-file-label {
-    font-size: 14px;
-    position: relative;
-    left: -170px;
-    color: var(--color-text-muted);
-    margin-right: -120px;
-  }
-
-  /* Custom button for local file selector */
-  input[type="file"]::file-selector-button {
-    font-size: 12px;
-    position: relative;
-    top: 3px;
-    left: 3px;
-    border: 1px solid var(--color-border);
-    padding: 0.2em 0.4em;
-    border-radius: 0.2em;
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 14px;
+    border-radius: 15px;
     background-color: var(--color-surface);
     color: var(--color-text);
+    border: 1px solid var(--color-border);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .local-video-file-label:hover {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  /* Current file-selection status ("No file chosen" or the selected file's
+     name) — the only place this text is shown; kept updated by JS on the
+     input's `change` event. Truncates long filenames instead of overflowing
+     into neighboring controls (spec 006 edge case). */
+  .local-video-filename {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    max-width: 140px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   /* YouTube input */
