@@ -7,3 +7,9 @@ test-results/
 playwright-report/
 playwright/.cache/
 tests/.cache/
+
+# Playwright MCP session artifacts (qa-reviewer agent, .claude/agents/qa-reviewer.md)
+.playwright-mcp/
+
+# qa-reviewer Stop hook local state (once-per-session markers)
+.claude/hooks/.qa-reviewer-sessions/

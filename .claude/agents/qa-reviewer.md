@@ -102,4 +102,9 @@ as one input among several, not a substitute for your own live testing.
 - **Bash is for running the app and reading output only** — starting/stopping the
   local server, `curl` checks, and (optionally) `npm test` as one input. Never use it
   to modify any tracked file.
-- **Clean up after yourself.** Kill any server you started before finishing.
+- **Clean up after yourself.** Kill any server you started before finishing. The
+  Playwright MCP tools save screenshots/traces to a `.playwright-mcp/` directory and
+  can write PNGs to the repo root by default — `.playwright-mcp/` and stray
+  root-level `.png` files are gitignored, but still delete them (`rm -rf
+  .playwright-mcp` and any `*.png` you created directly in the repo root) before
+  finishing so the working tree stays tidy for whoever looks at it next.

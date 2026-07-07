@@ -30,6 +30,14 @@ class VideoPlayer {
     this.type = 'html5';
   }
 
+  // Switches playback to the (already-created) YouTube player and cues a video by
+  // ID, without attempting to autoplay — see loadVideo()'s call site for why
+  // cueVideoById (rather than loadVideoById + pause) is used.
+  cueVideo(videoId) {
+    this.type = 'youtube';
+    this.youtubePlayer.cueVideoById(videoId);
+  }
+
   // Register a callback invoked once the currently-loading video is confirmed playable
   onReady(callback) {
     this.readyCallback = callback;
@@ -428,14 +436,12 @@ function loadVideo() {
   html5PlayerElement.style.display = 'none';
   document.getElementById('player').style.display = 'block';
 
-  videoPlayer.setYouTubePlayer(videoPlayer.youtubePlayer);
-
   // cueVideoById (rather than loadVideoById + pause) loads the video's thumbnail
   // and prepares it for playback without attempting to autoplay — loadVideoById
   // starts playing immediately, and pausing right after can leave the player
   // showing a blank black frame instead of the video's thumbnail, especially
   // when this isn't triggered by a fresh, direct user gesture.
-  videoPlayer.youtubePlayer.cueVideoById(videoId);
+  videoPlayer.cueVideo(videoId);
   section.start = 0;
   section.end = 0;
   loopState = 0;
